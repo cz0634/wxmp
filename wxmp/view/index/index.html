@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div style="width: 100%;text-align: center">
+    <img id="qrCode" src="{$qrPath}" alt="" style="width: 400px;margin-top: 100px"/>
+    <p id="msg">请扫描上方二维码，登录微信公众号</p>
+</div>
+</body>
+<script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+<script>
+    function getQrRes() {
+        $.get("/index.php?s=/index/checkLogin",function(res){
+            if (res.code == 2) { //未扫码
+                setTimeout (getQrRes,500);
+            } else if (res.code == 1) { //成功
+                $('#msg').html(res.msg);
+            } else if (res.code == 0) { //登录失败
+                alert(res.msg)
+            } else if (res.code == 3) { //扫码未确认
+                $('#msg').html('已扫码，请在手机上面确认。');
+                setTimeout (getQrRes,500);
+            }
+        })
+    }
+    getQrRes();
+</script>
+</html>
